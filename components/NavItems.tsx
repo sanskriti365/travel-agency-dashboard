@@ -1,14 +1,19 @@
 import React from "react";
-import { href, Link, NavLink } from "react-router";
+import { href, Link, NavLink, useLoaderData, useNavigate } from "react-router";
+import { logoutUser } from "~/appwrite/auth";
 import { sidebarItems } from "~/constants";
 import { cn } from "~/lib/utils";
 
 const NavItems = ({handleClick} : {handleClick?: () => void}) => {
-  const user = {
-    name: "Sanskriti",
-    email: "sanskritigupta85@gmail.com",
-    imageUrl: "/assets/images/usernameLogo.jpg",
-  };
+  //useLoaderData will gets the data from the loader funtion of the nearest route.
+  const user = useLoaderData();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate('/sign-in')
+  }
+
   return (
     <section className="nav-items">
       <Link to="/" className="link-logo">
@@ -41,6 +46,7 @@ const NavItems = ({handleClick} : {handleClick?: () => void}) => {
           <img
             src={user?.imageUrl || "/assets/images/usernameLogo.jpg"}
             alt={user?.name || "Sanskriti"}
+            referrerPolicy="no-referrer"
           />
           <article>
             <h2>{user?.name}</h2>
@@ -48,9 +54,7 @@ const NavItems = ({handleClick} : {handleClick?: () => void}) => {
           </article>
           <button
             className="cursor-pointer"
-            onClick={() => {
-              console.log("logout");
-            }}
+            onClick={handleLogout}
           >
             <img
               src="/assets/icons/logout.svg"
